@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetDataWithViaCepApiUseCaseImpl_Execute(t *testing.T) {
+func TestGetDataWithViaCepApiUseCaseImpl_Execute_ValidZipCode(t *testing.T) {
 	// Arrange
 	mockResponseBody := `{"cep":"12345678","logradouro":"Rua Teste","bairro":"Bairro Teste","localidade":"Cidade Teste","uf":"TS"}`
 	mockResponse := httpmock.NewStringResponse(http.StatusOK, mockResponseBody)
@@ -30,4 +30,18 @@ func TestGetDataWithViaCepApiUseCaseImpl_Execute(t *testing.T) {
 	assert.Equal(t, "Bairro Teste", result.Bairro)
 	assert.Equal(t, "Cidade Teste", result.Localidade)
 	assert.Equal(t, "TS", result.Uf)
+}
+
+func TestGetDataWithViaCepApiUseCaseImpl_Execute_InvalidZipCode(t *testing.T) {
+	// Arrange
+	client := &http.Client{Transport: httpmock.DefaultTransport}
+	useCase := NewGetDataWithViaCepApiUseCaseImpl(client)
+
+	// Act
+	result, res, err := useCase.Execute(context.Background(), "123456789")
+
+	// Assert
+	assert.Equal(t, http.StatusUnprocessableEntity, res.StatusCode)
+	assert.Error(t, err)
+	assert.Nil(t, result)
 }

@@ -33,27 +33,38 @@ func NewGetDataWithViaCepApiUseCaseImpl(client *http.Client) *GetDataWithViaCepA
 func (g *GetDataWithViaCepApiUseCaseImpl) Execute(ctx context.Context, zipCode string) (*ViaCep, *http.Response, error) {
 	var response ViaCep
 
+	if invalidZipCode(zipCode) {
+		return nil, &http.Response{
+			StatusCode: http.StatusUnprocessableEntity,
+			Status:     http.StatusText(http.StatusUnprocessableEntity),
+		}, fmt.Errorf("invalid zipcode")
+	}
+
 	url := fmt.Sprintf("http://viacep.com.br/ws/%s/json/", zipCode)
 
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
-		return nil, nil, fmt.Errorf("failed to create request: %v", err)
+		return nil, nil, fmt.Errorf("failed to create request (viacep): %v", err)
 	}
 
 	res, err := g.Client.Do(req)
 	if err != nil {
-		return nil, nil, fmt.Errorf("failed to make HTTP request: %v", err)
+		return nil, nil, fmt.Errorf("failed to make HTTP request (viacep): %v", err)
 	}
 	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
-		return nil, res, fmt.Errorf("unexpected status code: %d", res.StatusCode)
+		return nil, res, fmt.Errorf("unexpected status code (viacep): %d", res.StatusCode)
 	}
 
 	err = json.NewDecoder(res.Body).Decode(&response)
 	if err != nil {
-		return nil, res, fmt.Errorf("failed to decode response: %v", err)
+		return nil, res, fmt.Errorf("failed to decode response (viacep): %v", err)
 	}
 
 	return &response, res, nil
+}
+
+func invalidZipCode(zipCode string) bool {
+	return len(zipCode) != 8
 }

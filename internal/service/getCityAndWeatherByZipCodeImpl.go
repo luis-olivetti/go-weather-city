@@ -31,15 +31,14 @@ func NewGetCityAndWeatherByZipCodeImpl(
 }
 
 func (g *GetCityAndWeatherByZipCodeImpl) Execute(ctx context.Context, zipCode string) (*GetCityAndWeatherByZipCodeDTO, error, int16) {
-	err := validateZipCode(zipCode)
-	if err != nil {
-		fmt.Println(err)
-		return nil, err, 422
-	}
-
 	viaCep, res, err := g.GetDataWithViaCepApiUseCase.Execute(ctx, zipCode)
 	if err != nil {
 		if res.StatusCode >= 400 && res.StatusCode < 500 {
+
+			if res.StatusCode == 422 {
+				return nil, fmt.Errorf("Invalid ZipCode"), 422
+			}
+
 			return nil, fmt.Errorf("ZipCode not found"), 404
 		}
 
@@ -65,12 +64,4 @@ func (g *GetCityAndWeatherByZipCodeImpl) Execute(ctx context.Context, zipCode st
 	}
 
 	return dto, nil, 200
-}
-
-func validateZipCode(zipCode string) error {
-	if len(zipCode) != 8 {
-		return fmt.Errorf("Invalid ZipCode")
-	}
-
-	return nil
 }
