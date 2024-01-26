@@ -54,3 +54,17 @@ Execute o seguinte comando a partir do diretório raíz?
 ```shell
 go-weather-city$ go run cmd/main.go cmd/wire_gen.go
 ```
+
+## Verificando a cobertura de testes
+
+Simples:
+```shell
+go-weather-city$ go test -cover ./...
+```
+
+Detalhado:
+```shell
+go-weather-city$ go test -coverprofile=coverage.out ./...
+go-weather-city$ go tool cover -html=coverage.out -o coverage.html
+
+```

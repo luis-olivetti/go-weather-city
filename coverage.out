@@ -1,0 +1,21 @@
+mode: set
+github.com/luis-olivetti/go-weather-city/internal/usecase/getDataWithViaCepApiUseCaseImpl.go:27.95,31.2 1 1
+github.com/luis-olivetti/go-weather-city/internal/usecase/getDataWithViaCepApiUseCaseImpl.go:33.121,39.16 4 1
+github.com/luis-olivetti/go-weather-city/internal/usecase/getDataWithViaCepApiUseCaseImpl.go:39.16,41.3 1 0
+github.com/luis-olivetti/go-weather-city/internal/usecase/getDataWithViaCepApiUseCaseImpl.go:43.2,44.16 2 1
+github.com/luis-olivetti/go-weather-city/internal/usecase/getDataWithViaCepApiUseCaseImpl.go:44.16,46.3 1 0
+github.com/luis-olivetti/go-weather-city/internal/usecase/getDataWithViaCepApiUseCaseImpl.go:47.2,49.37 2 1
+github.com/luis-olivetti/go-weather-city/internal/usecase/getDataWithViaCepApiUseCaseImpl.go:49.37,51.3 1 0
+github.com/luis-olivetti/go-weather-city/internal/usecase/getDataWithViaCepApiUseCaseImpl.go:53.2,54.16 2 1
+github.com/luis-olivetti/go-weather-city/internal/usecase/getDataWithViaCepApiUseCaseImpl.go:54.16,56.3 1 0
+github.com/luis-olivetti/go-weather-city/internal/usecase/getDataWithViaCepApiUseCaseImpl.go:58.2,58.28 1 1
+github.com/luis-olivetti/go-weather-city/internal/usecase/getTemperatureWithWeatherApiUseCaseImpl.go:34.111,38.2 1 0
+github.com/luis-olivetti/go-weather-city/internal/usecase/getTemperatureWithWeatherApiUseCaseImpl.go:40.126,46.16 4 0
+github.com/luis-olivetti/go-weather-city/internal/usecase/getTemperatureWithWeatherApiUseCaseImpl.go:46.16,48.3 1 0
+github.com/luis-olivetti/go-weather-city/internal/usecase/getTemperatureWithWeatherApiUseCaseImpl.go:50.2,51.16 2 0
+github.com/luis-olivetti/go-weather-city/internal/usecase/getTemperatureWithWeatherApiUseCaseImpl.go:51.16,53.3 1 0
+github.com/luis-olivetti/go-weather-city/internal/usecase/getTemperatureWithWeatherApiUseCaseImpl.go:54.2,56.37 2 0
+github.com/luis-olivetti/go-weather-city/internal/usecase/getTemperatureWithWeatherApiUseCaseImpl.go:56.37,58.3 1 0
+github.com/luis-olivetti/go-weather-city/internal/usecase/getTemperatureWithWeatherApiUseCaseImpl.go:60.2,61.16 2 0
+github.com/luis-olivetti/go-weather-city/internal/usecase/getTemperatureWithWeatherApiUseCaseImpl.go:61.16,63.3 1 0
+github.com/luis-olivetti/go-weather-city/internal/usecase/getTemperatureWithWeatherApiUseCaseImpl.go:65.2,68.25 3 0
