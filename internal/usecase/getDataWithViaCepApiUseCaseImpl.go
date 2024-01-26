@@ -20,17 +20,17 @@ type ViaCep struct {
 	Siafi       string `json:"siafi"`
 }
 
-type GetDataWithViaCepApiUseCase struct {
+type GetDataWithViaCepApiUseCaseImpl struct {
 	Client *http.Client
 }
 
-func NewGetDataWithViaCepApiUseCase(client *http.Client) *GetDataWithViaCepApiUseCase {
-	return &GetDataWithViaCepApiUseCase{
+func NewGetDataWithViaCepApiUseCaseImpl(client *http.Client) *GetDataWithViaCepApiUseCaseImpl {
+	return &GetDataWithViaCepApiUseCaseImpl{
 		Client: client,
 	}
 }
 
-func (g *GetDataWithViaCepApiUseCase) Execute(ctx context.Context, zipCode string) (*ViaCep, error) {
+func (g *GetDataWithViaCepApiUseCaseImpl) Execute(ctx context.Context, zipCode string) (*ViaCep, error) {
 	var response ViaCep
 
 	url := fmt.Sprintf("http://viacep.com.br/ws/%s/json/", zipCode)

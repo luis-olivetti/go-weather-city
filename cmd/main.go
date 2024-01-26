@@ -1,4 +1,3 @@
-// server go with mux
 package main
 
 import (
@@ -6,8 +5,6 @@ import (
 	"log"
 	"net/http"
 	"time"
-
-	"github.com/luis-olivetti/go-weather-city/internal/service"
 )
 
 func main() {
@@ -27,11 +24,10 @@ func main() {
 	mux.HandleFunc("/city", func(w http.ResponseWriter, r *http.Request) {
 		zipCode := r.URL.Query().Get("zipCode")
 
-		client := &http.Client{}
+		usecase := InitializeGetDataWithViaCepApiUseCase(&http.Client{})
+		service := InitializeGetCityAndWeatherByZipCode(usecase)
 
-		g := service.NewGetCityAndWeatherByZipCode(client)
-
-		cityName := g.Execute(r.Context(), zipCode)
+		cityName := service.Execute(r.Context(), zipCode)
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
