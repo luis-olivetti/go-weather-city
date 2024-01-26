@@ -1,4 +1,16 @@
 mode: set
+github.com/luis-olivetti/go-weather-city/internal/service/getCityAndWeatherByZipCodeImpl.go:26.35,31.2 1 1
+github.com/luis-olivetti/go-weather-city/internal/service/getCityAndWeatherByZipCodeImpl.go:33.134,35.16 2 1
+github.com/luis-olivetti/go-weather-city/internal/service/getCityAndWeatherByZipCodeImpl.go:35.16,36.52 1 1
+github.com/luis-olivetti/go-weather-city/internal/service/getCityAndWeatherByZipCodeImpl.go:36.52,37.29 1 1
+github.com/luis-olivetti/go-weather-city/internal/service/getCityAndWeatherByZipCodeImpl.go:37.29,39.5 1 1
+github.com/luis-olivetti/go-weather-city/internal/service/getCityAndWeatherByZipCodeImpl.go:40.4,40.52 1 1
+github.com/luis-olivetti/go-weather-city/internal/service/getCityAndWeatherByZipCodeImpl.go:42.3,42.23 1 1
+github.com/luis-olivetti/go-weather-city/internal/service/getCityAndWeatherByZipCodeImpl.go:45.2,45.29 1 1
+github.com/luis-olivetti/go-weather-city/internal/service/getCityAndWeatherByZipCodeImpl.go:45.29,47.3 1 1
+github.com/luis-olivetti/go-weather-city/internal/service/getCityAndWeatherByZipCodeImpl.go:49.2,50.16 2 1
+github.com/luis-olivetti/go-weather-city/internal/service/getCityAndWeatherByZipCodeImpl.go:50.16,53.3 2 1
+github.com/luis-olivetti/go-weather-city/internal/service/getCityAndWeatherByZipCodeImpl.go:55.2,63.22 2 1
 github.com/luis-olivetti/go-weather-city/internal/usecase/getDataWithViaCepApiUseCaseImpl.go:27.95,31.2 1 1
 github.com/luis-olivetti/go-weather-city/internal/usecase/getDataWithViaCepApiUseCaseImpl.go:33.121,36.29 2 1
 github.com/luis-olivetti/go-weather-city/internal/usecase/getDataWithViaCepApiUseCaseImpl.go:36.29,41.3 1 1

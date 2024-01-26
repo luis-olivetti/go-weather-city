@@ -34,14 +34,11 @@ func (g *GetCityAndWeatherByZipCodeImpl) Execute(ctx context.Context, zipCode st
 	viaCep, res, err := g.GetDataWithViaCepApiUseCase.Execute(ctx, zipCode)
 	if err != nil {
 		if res.StatusCode >= 400 && res.StatusCode < 500 {
-
 			if res.StatusCode == 422 {
 				return nil, fmt.Errorf("Invalid ZipCode"), 422
 			}
-
 			return nil, fmt.Errorf("ZipCode not found"), 404
 		}
-
 		return nil, err, 500
 	}
 
