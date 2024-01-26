@@ -6,13 +6,13 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/luis-olivetti/go-weather-city/internal/service"
 )
 
 func main() {
-	// create new mux
 	mux := http.NewServeMux()
 
-	// create new server
 	srv := &http.Server{
 		Addr:         ":8080",
 		Handler:      mux,
@@ -20,11 +20,20 @@ func main() {
 		WriteTimeout: 10 * time.Second,
 	}
 
-	// handle route
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello World!")
 	})
 
-	// run server
+	mux.HandleFunc("/city", func(w http.ResponseWriter, r *http.Request) {
+		zipCode := r.URL.Query().Get("zipCode")
+		g := service.NewGetCityAndWeatherByZipCode()
+
+		cityName := g.Execute(r.Context(), zipCode)
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(cityName))
+	})
+
 	log.Fatal(srv.ListenAndServe())
 }
