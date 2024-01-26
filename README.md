@@ -46,3 +46,11 @@ Desenvolver um sistema em Go que receba um CEP, identifique a cidade e retorne o
 ### Google Cloud Run
 - Realize o deploy no Google Cloud Run (free tier).
 - Forneça o endereço ativo para acesso.
+
+## Como testar?
+
+Execute o seguinte comando a partir do diretório raíz?
+
+```shell
+go-weather-city$ go run cmd/main.go cmd/wire_gen.go
+```

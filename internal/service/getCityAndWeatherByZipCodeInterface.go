@@ -5,5 +5,5 @@ import (
 )
 
 type GetCityAndWeatherByZipCodeInteface interface {
-	Execute(ctx context.Context, zipCode string) string
+	Execute(ctx context.Context, zipCode string) (*GetCityAndWeatherByZipCodeDTO, error, int16)
 }

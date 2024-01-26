@@ -30,30 +30,30 @@ func NewGetDataWithViaCepApiUseCaseImpl(client *http.Client) *GetDataWithViaCepA
 	}
 }
 
-func (g *GetDataWithViaCepApiUseCaseImpl) Execute(ctx context.Context, zipCode string) (*ViaCep, error) {
+func (g *GetDataWithViaCepApiUseCaseImpl) Execute(ctx context.Context, zipCode string) (*ViaCep, *http.Response, error) {
 	var response ViaCep
 
 	url := fmt.Sprintf("http://viacep.com.br/ws/%s/json/", zipCode)
 
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create request: %v", err)
+		return nil, nil, fmt.Errorf("failed to create request: %v", err)
 	}
 
 	res, err := g.Client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("failed to make HTTP request: %v", err)
+		return nil, nil, fmt.Errorf("failed to make HTTP request: %v", err)
 	}
 	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("unexpected status code: %d", res.StatusCode)
+		return nil, res, fmt.Errorf("unexpected status code: %d", res.StatusCode)
 	}
 
 	err = json.NewDecoder(res.Body).Decode(&response)
 	if err != nil {
-		return nil, fmt.Errorf("failed to decode response: %v", err)
+		return nil, res, fmt.Errorf("failed to decode response: %v", err)
 	}
 
-	return &response, nil
+	return &response, res, nil
 }

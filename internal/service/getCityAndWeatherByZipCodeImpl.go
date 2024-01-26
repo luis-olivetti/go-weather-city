@@ -30,24 +30,47 @@ func NewGetCityAndWeatherByZipCodeImpl(
 	}
 }
 
-func (g *GetCityAndWeatherByZipCodeImpl) Execute(ctx context.Context, zipCode string) *GetCityAndWeatherByZipCodeDTO {
-	result, err := g.GetDataWithViaCepApiUseCase.Execute(ctx, zipCode)
+func (g *GetCityAndWeatherByZipCodeImpl) Execute(ctx context.Context, zipCode string) (*GetCityAndWeatherByZipCodeDTO, error, int16) {
+	err := validateZipCode(zipCode)
 	if err != nil {
 		fmt.Println(err)
+		return nil, err, 422
 	}
 
-	temperature, err := g.GetTemperatureWithWeatherApiUseCase.Execute(ctx, result.Localidade)
+	viaCep, res, err := g.GetDataWithViaCepApiUseCase.Execute(ctx, zipCode)
+	if err != nil {
+		if res.StatusCode >= 400 && res.StatusCode < 500 {
+			return nil, fmt.Errorf("ZipCode not found"), 404
+		}
+
+		return nil, err, 500
+	}
+
+	if viaCep.Localidade == "" {
+		return nil, fmt.Errorf("ZipCode not found"), 404
+	}
+
+	temperature, err := g.GetTemperatureWithWeatherApiUseCase.Execute(ctx, viaCep.Localidade)
 	if err != nil {
 		fmt.Println(err)
+		return nil, err, 500
 	}
 
 	dto := &GetCityAndWeatherByZipCodeDTO{
-		ZipCode:               result.Cep,
-		CityName:              result.Localidade,
+		ZipCode:               viaCep.Cep,
+		CityName:              viaCep.Localidade,
 		CelsiusTemperature:    temperature.Celsius,
 		FahrenheitTemperature: temperature.Fahrenheit,
 		KelvinTemperature:     temperature.Kelvin,
 	}
 
-	return dto
+	return dto, nil, 200
+}
+
+func validateZipCode(zipCode string) error {
+	if len(zipCode) != 8 {
+		return fmt.Errorf("Invalid ZipCode")
+	}
+
+	return nil
 }
