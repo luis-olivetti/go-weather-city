@@ -1,38 +1,48 @@
-# go-weather-city
+# Go Weather City
 
-## Objetivo:
-Desenvolver um sistema em Go que receba um CEP, identifica a cidade e retorna o clima atual (temperatura em graus celsius, fahrenheit e kelvin). Esse sistema deverá ser publicado no Google Cloud Run.
+## Objetivo
+Desenvolver um sistema em Go que receba um CEP, identifique a cidade e retorne o clima atual (temperatura em graus Celsius, Fahrenheit e Kelvin). Este sistema será implantado no Google Cloud Run.
 
-## Requisitos:
+## Requisitos
 
-O sistema deve receber um CEP válido de 8 digitos
-O sistema deve realizar a pesquisa do CEP e encontrar o nome da localização, a partir disso, deverá retornar as temperaturas e formata-lás em: Celsius, Fahrenheit, Kelvin.
-O sistema deve responder adequadamente nos seguintes cenários:
-Em caso de sucesso:
-Código HTTP: 200
-Response Body: { "temp_C": 28.5, "temp_F": 28.5, "temp_K": 28.5 }
-Em caso de falha, caso o CEP não seja válido (com formato correto):
-Código HTTP: 422
-Mensagem: invalid zipcode
-​​​Em caso de falha, caso o CEP não seja encontrado:
-Código HTTP: 404
-Mensagem: can not found zipcode
-Deverá ser realizado o deploy no Google Cloud Run.
+### Funcionalidades Principais
+- Receber um CEP válido de 8 dígitos.
+- Pesquisar o CEP para encontrar o nome da localização.
+- Retornar as temperaturas formatadas em Celsius, Fahrenheit e Kelvin.
 
-## Dicas:
+### Respostas Adequadas
+- **Em Caso de Sucesso:**
+  - Código HTTP: 200
+  - Response Body: `{ "temp_C": 28.5, "temp_F": 28.5, "temp_K": 28.5 }`
 
-Utilize a API viaCEP (ou similar) para encontrar a localização que deseja consultar a temperatura: https://viacep.com.br/
-Utilize a API WeatherAPI (ou similar) para consultar as temperaturas desejadas: https://www.weatherapi.com/
-Para realizar a conversão de Celsius para Fahrenheit, utilize a seguinte fórmula: F = C * 1,8 + 32
-Para realizar a conversão de Celsius para Kelvin, utilize a seguinte fórmula: K = C + 273
-Sendo F = Fahrenheit
-Sendo C = Celsius
-Sendo K = Kelvin
+- **Em Caso de Falha, CEP Inválido:**
+  - Código HTTP: 422
+  - Mensagem: "invalid zipcode"
 
-## Entrega:
+- **Em Caso de Falha, CEP Não Encontrado:**
+  - Código HTTP: 404
+  - Mensagem: "cannot found zipcode"
 
-O código-fonte completo da implementação.
-Documentação explicando como rodar o projeto em ambiente dev e production.
-Testes automatizados demonstrando o funcionamento.
-Utilize docker/docker-compose para que possamos realizar os testes de sua aplicação.
-Deploy realizado no Google Cloud Run (free tier) e endereço ativo para ser acessado.
+### Dicas
+- Utilize a API ViaCEP (ou similar) para encontrar a localização desejada: [ViaCEP](https://viacep.com.br/)
+- Utilize a API WeatherAPI (ou similar) para consultar as temperaturas desejadas: [WeatherAPI](https://www.weatherapi.com/)
+- Para a conversão de Celsius para Fahrenheit, utilize a fórmula: `F = C * 1,8 + 32`
+- Para a conversão de Celsius para Kelvin, utilize a fórmula: `K = C + 273`
+
+## Entrega
+
+### Código-Fonte
+- Código-fonte completo da implementação.
+
+### Documentação
+- Documentação explicando como rodar o projeto em ambientes de desenvolvimento e produção.
+
+### Testes Automatizados
+- Testes automatizados demonstrando o funcionamento.
+
+### Docker/Docker-Compose
+- Utilize Docker e Docker-Compose para facilitar os testes da aplicação.
+
+### Google Cloud Run
+- Realize o deploy no Google Cloud Run (free tier).
+- Forneça o endereço ativo para acesso.
