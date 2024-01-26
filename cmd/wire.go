@@ -16,7 +16,15 @@ func InitializeGetDataWithViaCepApiUseCase(*http.Client) *usecase.GetDataWithVia
 	return &usecase.GetDataWithViaCepApiUseCaseImpl{}
 }
 
-func InitializeGetCityAndWeatherByZipCode(useCase usecase.GetDataWithViaCepApiUseCaseInterface) *service.GetCityAndWeatherByZipCodeImpl {
+func InitializeGetTemperatureWithWeatherApiUseCase(*http.Client) *usecase.GetTemperatureWithWeatherApiUseCaseImpl {
+	wire.Build(usecase.NewGetTemperatureWithWeatherApiUseCaseImpl)
+	return &usecase.GetTemperatureWithWeatherApiUseCaseImpl{}
+}
+
+func InitializeGetCityAndWeatherByZipCode(
+	viaCepUseCase usecase.GetDataWithViaCepApiUseCaseInterface,
+	weatherUseCase usecase.GetTemperatureWithWeatherApiUseCaseInterface,
+) *service.GetCityAndWeatherByZipCodeImpl {
 	wire.Build(service.NewGetCityAndWeatherByZipCodeImpl)
 	return &service.GetCityAndWeatherByZipCodeImpl{}
 }

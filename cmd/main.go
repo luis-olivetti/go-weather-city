@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -24,14 +25,22 @@ func main() {
 	mux.HandleFunc("/city", func(w http.ResponseWriter, r *http.Request) {
 		zipCode := r.URL.Query().Get("zipCode")
 
-		usecase := InitializeGetDataWithViaCepApiUseCase(&http.Client{})
-		service := InitializeGetCityAndWeatherByZipCode(usecase)
+		viaCepUsecase := InitializeGetDataWithViaCepApiUseCase(&http.Client{})
+		weatherUsecase := InitializeGetTemperatureWithWeatherApiUseCase(&http.Client{})
+		service := InitializeGetCityAndWeatherByZipCode(viaCepUsecase, weatherUsecase)
 
-		cityName := service.Execute(r.Context(), zipCode)
+		response := service.Execute(r.Context(), zipCode)
+		jsonResponse, err := json.Marshal(response)
+
+		if err != nil {
+			fmt.Println(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("Internal Server Error"))
+		}
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(cityName))
+		w.Write(jsonResponse)
 	})
 
 	log.Fatal(srv.ListenAndServe())
