@@ -26,7 +26,10 @@ func main() {
 
 	mux.HandleFunc("/city", func(w http.ResponseWriter, r *http.Request) {
 		zipCode := r.URL.Query().Get("zipCode")
-		g := service.NewGetCityAndWeatherByZipCode()
+
+		client := &http.Client{}
+
+		g := service.NewGetCityAndWeatherByZipCode(client)
 
 		cityName := g.Execute(r.Context(), zipCode)
 
