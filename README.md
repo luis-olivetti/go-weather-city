@@ -49,10 +49,37 @@ Desenvolver um sistema em Go que receba um CEP, identifique a cidade e retorne o
 
 ## Como testar?
 
-Execute o seguinte comando a partir do diretório raíz?
+Execute o seguinte comando a partir do diretório raíz:
 
 ```shell
 go-weather-city$ go run cmd/main.go cmd/wire_gen.go
+```
+Ou Docker Compose:
+
+```shell
+go-weather-city$ docker compose up -d
+```
+
+Ou através do Docker que está descrito na próxima seção.
+
+O projeto também foi publicado no Google Cloud neste endereço:
+
+- https://go-weather-city-zxwp3x2zkq-uc.a.run.app/city?zipCode=47804112
+
+Observação: No diretório **api** encontra-se os arquivos **http** para facilitar os testes com a extensão **REST Client**  (VSCode).
+
+## Docker
+
+Gerar imagem:
+
+```shell
+go-weather-city$ docker build -t goweather .
+```
+
+Gerar contâiner mapeado na porta 8080:
+
+```shell
+go-weather-city$ docker run -p 8080:8080 goweather
 ```
 
 ## Verificando a cobertura de testes
@@ -66,5 +93,8 @@ Detalhado:
 ```shell
 go-weather-city$ go test -coverprofile=coverage.out ./...
 go-weather-city$ go tool cover -html=coverage.out -o coverage.html
-
 ```
+
+
+
+

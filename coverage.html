@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>usecase: Go Coverage Report</title>
+		<title>entity: Go Coverage Report</title>
 		<style>
 			body {
 				background: black;
@@ -55,9 +55,13 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">github.com/luis-olivetti/go-weather-city/internal/usecase/getDataWithViaCepApiUseCaseImpl.go (75.0%)</option>
+				<option value="file0">github.com/luis-olivetti/go-weather-city/internal/entity/temperature.go (100.0%)</option>
 				
-				<option value="file1">github.com/luis-olivetti/go-weather-city/internal/usecase/getTemperatureWithWeatherApiUseCaseImpl.go (0.0%)</option>
+				<option value="file1">github.com/luis-olivetti/go-weather-city/internal/service/getCityAndWeatherByZipCodeImpl.go (100.0%)</option>
+				
+				<option value="file2">github.com/luis-olivetti/go-weather-city/internal/usecase/getDataWithViaCepApiUseCaseImpl.go (78.9%)</option>
+				
+				<option value="file3">github.com/luis-olivetti/go-weather-city/internal/usecase/getTemperatureWithWeatherApiUseCaseImpl.go (83.3%)</option>
 				
 				</select>
 			</div>
@@ -71,7 +75,96 @@
 		</div>
 		<div id="content">
 		
-		<pre class="file" id="file0" style="display: none">package usecase
+		<pre class="file" id="file0" style="display: none">package entity
+
+type Temperature struct {
+        Celsius    float64
+        Fahrenheit float64
+        Kelvin     float64
+}
+
+func (t *Temperature) SetCelsius(temp float64) <span class="cov8" title="1">{
+        t.Celsius = temp
+        t.calcFahrenheit()
+        t.calcKelvin()
+}</span>
+
+func (t *Temperature) calcFahrenheit() <span class="cov8" title="1">{
+        t.Fahrenheit = t.Celsius*1.8 + 32
+}</span>
+
+func (t *Temperature) calcKelvin() <span class="cov8" title="1">{
+        t.Kelvin = t.Celsius + 273.15
+}</span>
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package service
+
+import (
+        "context"
+        "fmt"
+
+        "github.com/luis-olivetti/go-weather-city/internal/usecase"
+)
+
+type GetCityAndWeatherByZipCodeDTO struct {
+        ZipCode               string
+        CityName              string
+        CelsiusTemperature    float64 `json:"temp_C"`
+        FahrenheitTemperature float64 `json:"temp_F"`
+        KelvinTemperature     float64 `json:"temp_K"`
+}
+
+type GetCityAndWeatherByZipCodeImpl struct {
+        GetDataWithViaCepApiUseCase         usecase.GetDataWithViaCepApiUseCaseInterface
+        GetTemperatureWithWeatherApiUseCase usecase.GetTemperatureWithWeatherApiUseCaseInterface
+}
+
+func NewGetCityAndWeatherByZipCodeImpl(
+        viaCepUseCase usecase.GetDataWithViaCepApiUseCaseInterface,
+        weatherUseCase usecase.GetTemperatureWithWeatherApiUseCaseInterface,
+) *GetCityAndWeatherByZipCodeImpl <span class="cov8" title="1">{
+        return &amp;GetCityAndWeatherByZipCodeImpl{
+                GetDataWithViaCepApiUseCase:         viaCepUseCase,
+                GetTemperatureWithWeatherApiUseCase: weatherUseCase,
+        }
+}</span>
+
+func (g *GetCityAndWeatherByZipCodeImpl) Execute(ctx context.Context, zipCode string) (*GetCityAndWeatherByZipCodeDTO, error, int16) <span class="cov8" title="1">{
+        viaCep, res, err := g.GetDataWithViaCepApiUseCase.Execute(ctx, zipCode)
+        if err != nil </span><span class="cov8" title="1">{
+                if res.StatusCode &gt;= 400 &amp;&amp; res.StatusCode &lt; 500 </span><span class="cov8" title="1">{
+                        if res.StatusCode == 422 </span><span class="cov8" title="1">{
+                                return nil, fmt.Errorf("Invalid ZipCode"), 422
+                        }</span>
+                        <span class="cov8" title="1">return nil, fmt.Errorf("ZipCode not found"), 404</span>
+                }
+                <span class="cov8" title="1">return nil, err, 500</span>
+        }
+
+        <span class="cov8" title="1">if viaCep.Localidade == "" </span><span class="cov8" title="1">{
+                return nil, fmt.Errorf("ZipCode not found"), 404
+        }</span>
+
+        <span class="cov8" title="1">temperature, err := g.GetTemperatureWithWeatherApiUseCase.Execute(ctx, viaCep.Localidade)
+        if err != nil </span><span class="cov8" title="1">{
+                fmt.Println(err)
+                return nil, err, 500
+        }</span>
+
+        <span class="cov8" title="1">dto := &amp;GetCityAndWeatherByZipCodeDTO{
+                ZipCode:               viaCep.Cep,
+                CityName:              viaCep.Localidade,
+                CelsiusTemperature:    temperature.Celsius,
+                FahrenheitTemperature: temperature.Fahrenheit,
+                KelvinTemperature:     temperature.Kelvin,
+        }
+
+        return dto, nil, 200</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package usecase
 
 import (
         "context"
@@ -106,33 +199,44 @@ func NewGetDataWithViaCepApiUseCaseImpl(client *http.Client) *GetDataWithViaCepA
 func (g *GetDataWithViaCepApiUseCaseImpl) Execute(ctx context.Context, zipCode string) (*ViaCep, *http.Response, error) <span class="cov8" title="1">{
         var response ViaCep
 
-        url := fmt.Sprintf("http://viacep.com.br/ws/%s/json/", zipCode)
+        if invalidZipCode(zipCode) </span><span class="cov8" title="1">{
+                return nil, &amp;http.Response{
+                        StatusCode: http.StatusUnprocessableEntity,
+                        Status:     http.StatusText(http.StatusUnprocessableEntity),
+                }, fmt.Errorf("invalid zipcode")
+        }</span>
+
+        <span class="cov8" title="1">url := fmt.Sprintf("http://viacep.com.br/ws/%s/json/", zipCode)
 
         req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
         if err != nil </span><span class="cov0" title="0">{
-                return nil, nil, fmt.Errorf("failed to create request: %v", err)
+                return nil, nil, fmt.Errorf("failed to create request (viacep): %v", err)
         }</span>
 
         <span class="cov8" title="1">res, err := g.Client.Do(req)
         if err != nil </span><span class="cov0" title="0">{
-                return nil, nil, fmt.Errorf("failed to make HTTP request: %v", err)
+                return nil, nil, fmt.Errorf("failed to make HTTP request (viacep): %v", err)
         }</span>
         <span class="cov8" title="1">defer res.Body.Close()
 
         if res.StatusCode != http.StatusOK </span><span class="cov0" title="0">{
-                return nil, res, fmt.Errorf("unexpected status code: %d", res.StatusCode)
+                return nil, res, fmt.Errorf("unexpected status code (viacep): %d", res.StatusCode)
         }</span>
 
         <span class="cov8" title="1">err = json.NewDecoder(res.Body).Decode(&amp;response)
         if err != nil </span><span class="cov0" title="0">{
-                return nil, res, fmt.Errorf("failed to decode response: %v", err)
+                return nil, res, fmt.Errorf("failed to decode response (viacep): %v", err)
         }</span>
 
         <span class="cov8" title="1">return &amp;response, res, nil</span>
 }
+
+func invalidZipCode(zipCode string) bool <span class="cov8" title="1">{
+        return len(zipCode) != 8
+}</span>
 </pre>
 		
-		<pre class="file" id="file1" style="display: none">package usecase
+		<pre class="file" id="file3" style="display: none">package usecase
 
 import (
         "context"
@@ -165,13 +269,13 @@ type GetTemperatureWithWeatherApiUseCaseImpl struct {
         Client *http.Client
 }
 
-func NewGetTemperatureWithWeatherApiUseCaseImpl(client *http.Client) *GetTemperatureWithWeatherApiUseCaseImpl <span class="cov0" title="0">{
+func NewGetTemperatureWithWeatherApiUseCaseImpl(client *http.Client) *GetTemperatureWithWeatherApiUseCaseImpl <span class="cov8" title="1">{
         return &amp;GetTemperatureWithWeatherApiUseCaseImpl{
                 Client: client,
         }
 }</span>
 
-func (g *GetTemperatureWithWeatherApiUseCaseImpl) Execute(ctx context.Context, cityName string) (*entity.Temperature, error) <span class="cov0" title="0">{
+func (g *GetTemperatureWithWeatherApiUseCaseImpl) Execute(ctx context.Context, cityName string) (*entity.Temperature, error) <span class="cov8" title="1">{
         var response Weather
 
         url := fmt.Sprintf("http://api.weatherapi.com/v1/current.json?key=a91eb948a337442782b123810242601&amp;q=%s", cityName)
@@ -181,22 +285,22 @@ func (g *GetTemperatureWithWeatherApiUseCaseImpl) Execute(ctx context.Context, c
                 return nil, fmt.Errorf("failed to create request: %v", err)
         }</span>
 
-        <span class="cov0" title="0">res, err := g.Client.Do(req)
+        <span class="cov8" title="1">res, err := g.Client.Do(req)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, fmt.Errorf("failed to make HTTP request: %v", err)
         }</span>
-        <span class="cov0" title="0">defer res.Body.Close()
+        <span class="cov8" title="1">defer res.Body.Close()
 
-        if res.StatusCode != http.StatusOK </span><span class="cov0" title="0">{
+        if res.StatusCode != http.StatusOK </span><span class="cov8" title="1">{
                 return nil, fmt.Errorf("unexpected status code: %d", res.StatusCode)
         }</span>
 
-        <span class="cov0" title="0">err = json.NewDecoder(res.Body).Decode(&amp;response)
+        <span class="cov8" title="1">err = json.NewDecoder(res.Body).Decode(&amp;response)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, fmt.Errorf("failed to decode response: %v", err)
         }</span>
 
-        <span class="cov0" title="0">temperature := &amp;entity.Temperature{}
+        <span class="cov8" title="1">temperature := &amp;entity.Temperature{}
         temperature.SetCelsius(response.Current.TempC)
 
         return temperature, nil</span>

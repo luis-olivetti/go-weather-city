@@ -1,0 +1,2 @@
+GET https://go-weather-city-zxwp3x2zkq-uc.a.run.app/city?zipCode=47804112 HTTP/1.1
+Content-Type: application/json
