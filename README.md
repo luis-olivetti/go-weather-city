@@ -53,23 +53,25 @@ Desenvolver um sistema em Go que receba um CEP, identifique a cidade e retorne o
 Execute o seguinte comando através do Docker Compose:
 
 ```shell
-go-weather-city$ docker compose up -d
-```
-Ou através do Docker que está descrito na próxima seção.
-
-Caso queria executar manualmente, insira o seguinte comando a partir do diretório raíz:
-
-```shell
-go-weather-city$ go run cmd/main.go cmd/wire_gen.go
+go-weather-city$ DOCKERFILE=Dockerfile.dev docker-compose up --build
 ```
 
 ### Ambiente Produção
+Execute o seguinte comando através do Docker Compose:
+
+```shell
+go-weather-city$ DOCKERFILE=Dockerfile.prod docker-compose up --build
+```
+
+### Google Cloud
 
 O projeto também foi publicado no Google Cloud neste endereço:
 
 - https://go-weather-city-zxwp3x2zkq-uc.a.run.app/city?zipCode=47804112
 
-Observação: No diretório **api** encontra-se os arquivos **http** para facilitar os testes com a extensão **REST Client**  (VSCode).
+### Observações
+
+No diretório **api** encontra-se os arquivos **http** para facilitar os testes com a extensão **REST Client**  (VSCode).
 
 ## Docker
 

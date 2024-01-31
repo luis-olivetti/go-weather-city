@@ -3,6 +3,6 @@ services:
   goweather:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ${DOCKERFILE:-Dockerfile.prod}
     ports:
       - "8080:8080"
