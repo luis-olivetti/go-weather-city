@@ -50,18 +50,41 @@ Desenvolver um sistema em Go que receba um CEP, identifique a cidade e retorne o
 ## Como executar?
 
 ### Ambiente Dev
+Altere o arquivo .env com os seguintes valores:
+
+DOCKERFILE=Dockerfile.dev
+DOCKERIMAGE=goweatherimagedev
+DOCKERCONT=goweathercontdev
+
 Execute o seguinte comando através do Docker Compose:
 
 ```shell
-go-weather-city$ DOCKERFILE=Dockerfile.dev docker-compose up --build
+go-weather-city$ docker compose build
+go-weather-city$ docker run -it --name goweathercontdev goweatherimagedev
 ```
+
+Conecte-se no container **goweathercontdev** e execute o seguinte comando:
+
+```shell
+$ go run cmd/main.go cmd/wire_gen.go
+```
+
+Dica: Utilize a extensão **Remote Development** no **VSCode** para realizar um ´Attach to running container´.
 
 ### Ambiente Produção
+Altere o arquivo .env com os seguintes valores:
+
+DOCKERFILE=Dockerfile.prod
+DOCKERIMAGE=goweatherimageprod
+DOCKERCONT=goweathercontprod
+
 Execute o seguinte comando através do Docker Compose:
 
 ```shell
-go-weather-city$ DOCKERFILE=Dockerfile.prod docker-compose up --build
+go-weather-city$ docker compose up --build
 ```
+
+O container **goweathercontprod** estará pronto para uso e você pode realizar as chamadas HTTP.
 
 ### Google Cloud
 

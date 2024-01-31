@@ -4,5 +4,7 @@ services:
     build:
       context: .
       dockerfile: ${DOCKERFILE:-Dockerfile.prod}
+    image: ${DOCKERIMAGE:-goweatherimageprod}
+    container_name: ${DOCKERCONT:-goweathercontprod}
     ports:
       - "8080:8080"
