@@ -47,20 +47,23 @@ Desenvolver um sistema em Go que receba um CEP, identifique a cidade e retorne o
 - Realize o deploy no Google Cloud Run (free tier).
 - Forneça o endereço ativo para acesso.
 
-## Como testar?
+## Como executar?
 
-Execute o seguinte comando a partir do diretório raíz:
-
-```shell
-go-weather-city$ go run cmd/main.go cmd/wire_gen.go
-```
-Ou Docker Compose:
+### Ambiente Dev
+Execute o seguinte comando através do Docker Compose:
 
 ```shell
 go-weather-city$ docker compose up -d
 ```
-
 Ou através do Docker que está descrito na próxima seção.
+
+Caso queria executar manualmente, insira o seguinte comando a partir do diretório raíz:
+
+```shell
+go-weather-city$ go run cmd/main.go cmd/wire_gen.go
+```
+
+### Ambiente Produção
 
 O projeto também foi publicado no Google Cloud neste endereço:
 
