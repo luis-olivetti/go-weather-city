@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/luis-olivetti/go-weather-city/internal/entity"
 )
@@ -40,26 +41,27 @@ func NewGetTemperatureWithWeatherApiUseCaseImpl(client *http.Client) *GetTempera
 func (g *GetTemperatureWithWeatherApiUseCaseImpl) Execute(ctx context.Context, cityName string) (*entity.Temperature, error) {
 	var response Weather
 
-	url := fmt.Sprintf("http://api.weatherapi.com/v1/current.json?key=a91eb948a337442782b123810242601&q=%s", cityName)
+	cityNameEncoded := url.QueryEscape(cityName)
+	url := fmt.Sprintf("http://api.weatherapi.com/v1/current.json?key=a91eb948a337442782b123810242601&q=%s", cityNameEncoded)
 
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create request: %v", err)
+		return nil, fmt.Errorf("failed to create request: %v (weatherApi)", err)
 	}
 
 	res, err := g.Client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("failed to make HTTP request: %v", err)
+		return nil, fmt.Errorf("failed to make HTTP request: %v (weatherApi)", err)
 	}
 	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("unexpected status code: %d", res.StatusCode)
+		return nil, fmt.Errorf("unexpected status code: %d (weatherApi)", res.StatusCode)
 	}
 
 	err = json.NewDecoder(res.Body).Decode(&response)
 	if err != nil {
-		return nil, fmt.Errorf("failed to decode response: %v", err)
+		return nil, fmt.Errorf("failed to decode response: %v (weatherApi)", err)
 	}
 
 	temperature := &entity.Temperature{}
